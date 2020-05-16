@@ -5,9 +5,9 @@ const saltRounds = 10;
 
 const User = require("../models/Users");
 
-const redirectHome = (req, res, next) => {
-  if (req.session.userId) {
-    res.redirect("/");
+const redirectLogin = (req, res, next) => {
+  if (!req.session.userId) {
+    res.redirect("/login");
   } else {
     next();
   }
@@ -16,12 +16,14 @@ const redirectHome = (req, res, next) => {
 //home ###############################
 
 router.get("/", async (req, res) => {
-  if (req.session.id) {
-    const { userId, username } = req.session;
-    console.log("  from home", req.session);
-    res.send({ userId, username });
+  const { userId, username } = req.session;
+  if (req.session.id && username) {
+    const users = await User.query().select().where({ username: username });
+    const user = users[0];
+    console.log("  from home", user);
+    res.send(user);
   } else {
-    res.send({ loggedIn: false });
+    res.send({ isAuthenticated: false });
   }
 });
 
@@ -38,20 +40,19 @@ router.post("/users/login", async (req, res) => {
     if (!user) {
       return res.status(404).send({ message: "Wrong username" });
     }
-    req.session.userId = user.id;
-    req.session.username = username;
+
     // console.log("sessionID from login", req.session.id);
     bcrypt.compare(password, user.password, (error, isSame) => {
       if (error) {
         return res.status(500).send({});
       }
       if (!isSame) {
-        return res.status(404).send({});
+        return res.status(404).send({ message: "" });
       } else {
-        return res.status(200).send({
-          username: user.username,
-          userId: req.session.userId,
-        });
+        req.session.userId = user.id;
+        req.session.username = username;
+        console.log(req.session);
+        return res.status(200).send(user);
       }
     });
   } else {
@@ -72,7 +73,7 @@ router.post("/users/register", (req, res) => {
     age &&
     email
   ) {
-    if (password < 8) {
+    if (password.length < 8) {
       return res.status(400).send({ response: "Password is too short" });
     } else {
       bcrypt.hash(password, saltRounds, async (error, hashedPassword) => {
@@ -115,7 +116,6 @@ router.post("/users/register", (req, res) => {
 router.post("/logout", (req, res) => {
   req.session.destroy(() => {
     res.clearCookie("sid");
-    res.redirect("/");
   });
 });
 

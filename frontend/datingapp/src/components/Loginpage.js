@@ -1,20 +1,19 @@
 import React, { useState } from "react";
-import { useLocation, Redirect, Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+
 const LoginPage = (props) => {
+  // let location = useLocation();
+  // const { from } = location.state || { from: { pathname: "/profile" } };
+
   const [nameData, setUsername] = useState({ username: " " });
   const [passwordData, setPassword] = useState({ password: " " });
-  const [redirectToReferrer, setRedirect] = useState(false);
+  const [error, setError] = useState(false);
   const handleNameInput = (e) => {
     setUsername({ [e.target.id]: e.target.value });
   };
   const handlePasswordInput = (e) => {
     setPassword({ [e.target.id]: e.target.value });
   };
-
-  // const history = useHistory();
-  // const handleRedirect = () => {
-  //   history.push("/your-profile");
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,43 +34,49 @@ const LoginPage = (props) => {
       .then((res) => res.json())
       .then((data) => {
         console.log("user logg-in status :", data);
-        if (data.username) {
-          setRedirect(true);
-        } else {
+        if (!data.username) {
           console.log("wrong credentials");
+          setError(true);
+        } else {
+          handleRedirect();
+          handleUserStatus();
         }
       });
-    handleUserStatus();
   };
-  // console.log("props", props);
   const { handleUserStatus } = props;
-  let location = useLocation();
-  const { from } = location.state || { from: { pathname: "/profile" } };
-  //console.log("from", { from });
-  if (redirectToReferrer === true) {
-    return <Redirect to={from} />;
-  }
+
+  const history = useHistory();
+  const handleRedirect = () => {
+    history.push("/dashboard");
+  };
   return (
-    <div className="login-form">
-      <h4> In order to view all pages please login </h4>
-      <form onSubmit={handleSubmit}>
-        <input
-          id="username"
-          type="text"
-          placeholder="Username"
-          onChange={handleNameInput}
-          required
-        />
-        <input
-          id="password"
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handlePasswordInput}
-          required
-        />
-        <button type="submit">Submit</button>
-      </form>
+    <div>
+      <div className="loginForm">
+        <h3 className="title"> In order to view all pages please login </h3>
+        {error ? (
+          <p style={{ color: "#bb0000" }}>Wrong credentials.Try again</p>
+        ) : null}
+        <form onSubmit={handleSubmit}>
+          <input
+            id="username"
+            type="text"
+            placeholder="Username"
+            onChange={handleNameInput}
+            required
+          />
+          <input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="Password"
+            onChange={handlePasswordInput}
+            required
+          />
+          <button className="submitButton" type="submit">
+            Submit
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

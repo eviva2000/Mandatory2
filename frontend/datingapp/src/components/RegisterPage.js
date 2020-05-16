@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 const RegisterPage = (props) => {
   const [usernameData, setUsername] = useState({ username: "" });
   const [emailData, setEmail] = useState({ email: "" });
@@ -8,6 +9,7 @@ const RegisterPage = (props) => {
   const [repeatPasswordData, setRepeatpassword] = useState({
     repeatPassword: " ",
   });
+  const [error, setError] = useState(false);
   const handleNameInput = (e) => {
     setUsername({ [e.target.id]: e.target.value });
   };
@@ -48,25 +50,35 @@ const RegisterPage = (props) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(" Registeration status", data);
+        console.log(" Registeration status", data.response);
+        if (data.response === "Password is too short") {
+          setError(true);
+        } else {
+          handleRedirect();
+        }
       });
+  };
+  const history = useHistory();
+  const handleRedirect = () => {
+    history.push("/login");
   };
 
   return (
-    <div>
-      <h2>Register page</h2>
+    <div className="registerForm">
+      <h3 className="title">Create an Account!</h3>
       <form onSubmit={handleSubmit}>
         <input
           id="username"
           type="text"
-          placeholder="Username"
+          placeholder="Username *"
           onInput={handleNameInput}
           required
+          className="required"
         />
         <input
           id="email"
           type="email"
-          placeholder="Email"
+          placeholder="Email *"
           onInput={handleEmailInput}
           required
         />
@@ -74,7 +86,7 @@ const RegisterPage = (props) => {
           id="password"
           type="text"
           name=""
-          placeholder="Password"
+          placeholder="Password *"
           onInput={handlePasswordInput}
           required
         />
@@ -82,28 +94,36 @@ const RegisterPage = (props) => {
           id="repeatPassword"
           type="text"
           name=""
-          placeholder="Repeat Password"
+          placeholder="Repeat Password *"
           onInput={handleReapeatpasswordInput}
           required
         />
-        <input
-          id="passion"
-          type="text"
-          name=""
-          placeholder="Passion"
-          onInput={handlePassionInput}
-          required
-        />
-        <input
-          id="age"
-          type="text"
-          name=""
-          placeholder="Age"
-          onInput={handleAgeInput}
-          required
-        />
-        <button type="submit">Submit</button>
+        <div className="details">
+          <input
+            id="passion"
+            type="text"
+            name=""
+            placeholder="Passion *"
+            onInput={handlePassionInput}
+            required
+          />
+          <input
+            id="age"
+            type="text"
+            name=""
+            placeholder="Age"
+            onInput={handleAgeInput}
+          />
+        </div>
+        <button className="submitButton" type="submit">
+          Submit
+        </button>
       </form>
+      {error ? (
+        <p style={{ color: "#bb0000" }}>
+          Password must have at least 8 characters
+        </p>
+      ) : null}
     </div>
   );
 };

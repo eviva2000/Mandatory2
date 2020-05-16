@@ -6,20 +6,23 @@ import {
   Link,
   Route,
   Redirect,
-  withRouter,
 } from "react-router-dom";
 import "./App.css";
+import Home from "./components/Home";
+import Navbar from "./components/Navbar";
 import Members from "./components/AllMembers";
 import LoginPage from "./components/Loginpage";
 import RegisterPage from "./components/RegisterPage";
 import Profile from "./components/Profile";
 import ResetPassword from "./components/ResetPassword";
-
+import ResetPassScreen from "./components/ScreenForResetPassword";
+import Logout from "./components/Logout";
 function App() {
   const [userId, setId] = useState("");
+  const [auth, setAuth] = useState(false);
+  const [loggedUserInfo, setLoggedUserInfo] = useState({});
   const [loggedUserName, setLoggedUserName] = useState("");
 
-  const [toggle, setToggle] = useState(true);
   useEffect(() => {
     getUserStatus();
   }, []);
@@ -37,8 +40,12 @@ function App() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("userId and username", data);
-        setId(data.userId);
+        console.log("user-data", data);
+        setId(data.id);
+        if (data.isAuthenticated) {
+          setAuth(true);
+        }
+        setLoggedUserInfo(data);
         setLoggedUserName(data.username);
       });
   };
@@ -47,7 +54,7 @@ function App() {
     <Route
       {...rest}
       render={(props) =>
-        userId ? (
+        auth === true ? (
           <Component {...props} />
         ) : (
           <Redirect
@@ -60,75 +67,38 @@ function App() {
       }
     />
   );
-  const handleLogout = () => {
-    console.log("works");
-    fetch("http://localhost:9090/logout", {
-      method: "post",
-      async: true,
-      crossDomain: true,
-      credentials: "include",
-      headers: {
-        "content-type": "application/json",
-        "cache-control": "no-cache",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("userId", data.res);
-      });
-    getUserStatus();
-  };
   return (
     <Router>
       <div className="App">
-        {userId ? (
-          <>
-            <h3>Hi {loggedUserName}</h3>
-            <nav>
-              <li>
-                <Link to="/members">Members</Link>
-              </li>
+        <Navbar userId={userId} loggedUserName={loggedUserName} />
 
-              <li>
-                <Link to="/profile">Profile</Link>
-              </li>
-              <button onClick={handleLogout}>Log out</button>
-            </nav>
-          </>
-        ) : (
-          <nav>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/members">Members</Link>
-            </li>
-            <li>
-              <Link to="/login">Log in</Link>
-            </li>
-            <li>
-              <Link to="/register">Register</Link>
-            </li>
-          </nav>
-        )}
         <Switch>
           <Route exact path="/">
-            <h1>Home page</h1>
+            <Home />
           </Route>
           <PrivateRoute path="/members" component={Members} />
-
+          )} />
           <Route path="/login">
             <LoginPage handleUserStatus={getUserStatus} />
           </Route>
           <Route path="/register">
             <RegisterPage />
           </Route>
-          <Route path="/profile">
-            <Profile />
+          <Route path="/dashboard">
+            <Profile loggedUserInfo={loggedUserInfo} />
+          </Route>
+          <Route path="/logout">
+            <Logout handleUserStatus={getUserStatus} />
           </Route>
           <Route path="/resetpassword">
             <ResetPassword />
           </Route>
+          <Route
+            exact
+            path="/reset/:token"
+            component={ResetPassScreen}
+            handleUserStatus={getUserStatus}
+          />
         </Switch>
       </div>
     </Router>

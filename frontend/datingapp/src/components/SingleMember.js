@@ -8,19 +8,17 @@ const SingleMember = (props) => {
   useEffect(() => {
     async function fetchUserData() {
       const api_call = await fetch(`http://localhost:9090/members/${userId}`);
-
       const response = await api_call.json();
-
       setData(response);
     }
     fetchUserData();
-  });
+  }, [userId]);
 
   return (
     <div>
       {data.user.map((user) => {
         return (
-          <div className="userInfo" key={user.id}>
+          <div className="profileContainer" key={user.id}>
             <div id="imgWrapper">
               <img id="avatar" src={Avatar} alt="" />
             </div>
