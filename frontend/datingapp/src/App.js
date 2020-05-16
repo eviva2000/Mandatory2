@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Switch,
-  Link,
   Route,
   Redirect,
 } from "react-router-dom";
@@ -40,11 +39,12 @@ function App() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("user-data", data);
-        setId(data.id);
-        if (data.isAuthenticated) {
+        if (!data.isAuthenticated && !data.id) {
+          setAuth(false);
+        } else {
           setAuth(true);
         }
+        setId(data.id);
         setLoggedUserInfo(data);
         setLoggedUserName(data.username);
       });

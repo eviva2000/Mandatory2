@@ -17,7 +17,7 @@ const Profile = (props) => {
       </div>
       <div className="userInfo">
         <p>
-          About me :{" "}
+          <span> About me : </span>
           {loggedUserInfo.aboutme ? loggedUserInfo.aboutme : "Not set yet"}
         </p>
         <p>

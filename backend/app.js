@@ -26,27 +26,21 @@ app.use(
 );
 
 //limit the amount o fthe requests on the auth routes
-// const rateLimit = require("express-rate-limit");
-// const authlimiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 minutes
-//   max: 4, // limit each IP to 100 requests per windowMs
-// });
-// app.use("/users/login", authlimiter);
-// app.use("/users/register", authlimiter);
+const rateLimit = require("express-rate-limit");
+const authlimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 4, // limit each IP to 100 requests per windowMs
+});
+app.use("/users/login", authlimiter);
+app.use("/users/register", authlimiter);
 const User = require("./models/Users");
 
 /* Set up routes with our server instance */
-//const homeRoute = require("./routes/home");
 const getUsersRoute = require("./routes/getAllMembers");
 const singleUserRoute = require("./routes/getSingleUser");
-const playgroundRoute = require("./routes/playground.js");
 const usersRoute = require("./routes/users.js");
 const resetpassword = require("./routes/resetpassword");
-// only use the custom middleware for the secondpath route
-app.use(playgroundRoute);
 
-//app.use(homeRoute);
-//app.use(getUsersRoute);
 app.use(usersRoute);
 app.use(singleUserRoute);
 app.use(resetpassword);

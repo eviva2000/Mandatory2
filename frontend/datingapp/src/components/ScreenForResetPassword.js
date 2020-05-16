@@ -88,8 +88,8 @@ const ResetPassScreen = (props) => {
   return (
     <div>
       {!updated ? (
-        <div>
-          <h2>Changing password</h2>
+        <div className="resetForm">
+          <h2 className="title">Changing password</h2>
 
           <form onSubmit={updatePassword}>
             <input
@@ -99,17 +99,19 @@ const ResetPassScreen = (props) => {
               placeholder="Type your new password"
               onChange={handleChange}
             />
-            <button type="submit">Reset password</button>
+            <button className="submitButton" type="submit">
+              Reset password
+            </button>
           </form>
         </div>
       ) : null}
 
       {updated && (
         <div>
-          <p style={{ color: "#39C16C" }}>
+          <h3 style={{ color: "#39C16C", marginTop: "3em" }}>
             Your password has been successfully reset, please try logging in
             again.
-          </p>
+          </h3>
         </div>
       )}
     </div>

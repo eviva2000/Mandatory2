@@ -4,8 +4,6 @@ import Avatar from "../assets/unisexavatar.png";
 
 import MemberProfile from "./SingleMember";
 const Members = (props) => {
-  // const { isAuthenticated } = props;
-  // console.log("props", isAuthenticated);
   const [data, setData] = useState({ users: [] });
   useEffect(() => {
     async function fetchAllMembers() {
@@ -25,6 +23,7 @@ const Members = (props) => {
         >
           <img id="avatar" src={Avatar} alt="user-avatar" />
           <h2>{user.username}</h2>
+          <h5>Passion:{user.passion}</h5>
           <h5>Age:{user.age}</h5>
         </Link>
       </div>

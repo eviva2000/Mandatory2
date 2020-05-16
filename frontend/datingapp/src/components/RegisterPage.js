@@ -50,7 +50,7 @@ const RegisterPage = (props) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(" Registeration status", data.response);
+        // console.log(" Registeration status", data.response);
         if (data.response === "Password is too short") {
           setError(true);
         } else {
@@ -120,9 +120,9 @@ const RegisterPage = (props) => {
         </button>
       </form>
       {error ? (
-        <p style={{ color: "#bb0000" }}>
+        <h3 style={{ color: "#bb0000" }}>
           Password must have at least 8 characters
-        </p>
+        </h3>
       ) : null}
     </div>
   );

@@ -41,9 +41,11 @@
 .startBtn :hover a {
   color: #333;
 }
+
 .startBtn :hover {
   background-color: pink;
 }
+
 .startBtn li {
   list-style: none;
   transition: all 0.08s;
@@ -109,7 +111,7 @@ nav li a {
   padding: 2em;
 }
 .registerForm {
-  padding: 1em;
+  padding: 1em 2em;
 }
 .title {
   text-align: center;
@@ -130,7 +132,8 @@ nav li a {
 .registerForm input[type="password"],
 .registerForm input[type="text"],
 .registerForm input[type="email"],
-.resetForm input[type="email"] {
+.resetForm input[type="email"],
+.resetForm input[type="text"] {
   width: 100%;
   padding: 15px;
   border: 1px solid #dddddd;
@@ -147,7 +150,10 @@ nav li a {
   font-weight: bold;
   color: #ffffff;
 }
-
+.submitButton :hover {
+  background-color: pink;
+  color: #333;
+}
 .details {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -57,6 +57,7 @@ const Reserpassword = () => {
               placeholder="Enter your email address"
               onChange={handleChange}
             />
+
             <button className="submitButton" type="submit">
               Send email to reset password{" "}
             </button>
@@ -67,7 +68,7 @@ const Reserpassword = () => {
         </div>
       ) : (
         <div style={{ backgorundColor: "rgba(0,0,0,.6)" }}>
-          <h2 style={{ color: "#39C16C" }}>
+          <h2 style={{ color: "#39C16C", marginTop: "3em" }}>
             {" "}
             Please check your email and follow the link to reset your password
           </h2>

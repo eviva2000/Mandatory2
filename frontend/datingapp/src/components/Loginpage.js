@@ -54,7 +54,7 @@ const LoginPage = (props) => {
       <div className="loginForm">
         <h3 className="title"> In order to view all pages please login </h3>
         {error ? (
-          <p style={{ color: "#bb0000" }}>Wrong credentials.Try again</p>
+          <h3 style={{ color: "#bb0000" }}>Wrong credentials.Try again</h3>
         ) : null}
         <form onSubmit={handleSubmit}>
           <input
